@@ -20,4 +20,11 @@ namespace svg
     // @todo provide the implementation of SVGElement derived classes
     // HERE -->
 
+    Circle::Circle(const Color &fill, 
+                   const Point &center,
+                   const Point &radius)
+        : fill(fill), center(center), radius(radius)
+    {
+    }
+
 }
