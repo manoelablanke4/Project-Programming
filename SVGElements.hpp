@@ -39,6 +39,8 @@ namespace svg
         Point radius;
     };
 
+    // new classes
+
     class Circle : public SVGElement {
         public:
             Circle(const Color& fill, const Point& center, const Point& radius);
