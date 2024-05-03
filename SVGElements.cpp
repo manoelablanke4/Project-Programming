@@ -83,19 +83,19 @@ namespace svg
         Point top_right;
         top_right.x = bottom_right.x;
         top_right.y = top_left.y;
+
         Point bottom_left;
         bottom_left.x = top_left.x;
         bottom_left.y = bottom_right.y;
 
-
-        std::vector<Point> points;
+        std ::vector<Point> points;
         points.push_back(top_left);
         points.push_back(top_right);
         points.push_back(bottom_right);
         points.push_back(bottom_left);
-        points.push_back(top_left);
-        
+
         img.draw_polygon(points, fill);
+
     }
 
 
