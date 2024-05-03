@@ -23,5 +23,23 @@ namespace svg
         
         // TODO complete code -->
         
+        XMLElement *elem = xml_elem->FirstChildElement();
+         while (elem)
+    {
+        const char *elem_name = elem->Name();
+        if (strcmp(elem_name, "circle") == 0)
+        {
+            // Parse circle attributes and create a Circle object
+            double cx = elem->DoubleAttribute("cx");
+            double cy = elem->DoubleAttribute("cy");
+            double r = elem->DoubleAttribute("r");
+            Color fill = parse_color(elem->Attribute("fill"));
+            Point p;
+            p.x = cx;
+            p.y = cy;
+            svg_elements.push_back(new Circle(fill, p, r));
+        }
+
+         elem = elem->NextSiblingElement();
     }
-}
+}}
