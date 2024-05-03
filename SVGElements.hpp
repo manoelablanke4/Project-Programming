@@ -41,6 +41,67 @@ namespace svg
 
     // new classes
 
+    class Circle : public SVGElement
+    {
+    public:
+        Circle(const Color &fill, const Point &center, const double &radius);
+        void draw(PNGImage &img) const override;
+
+    private:
+        Color fill;
+        Point center;
+        double radius;
+    };
+
+    class Polyline : public SVGElement
+    {
+    public:
+        Polyline(const Color &stroke, const std::vector<Point> &points);
+        void draw(PNGImage &img) const override;
+
+    private:
+        Color stroke;
+        std::vector<Point> points;
+    };
+
+    class Line : public SVGElement
+    {
+    public:
+        Line(const Color &stroke, const Point &start, const Point &end);
+        void draw(PNGImage &img) const override;
+
+    private:
+        Color stroke;
+        Point start;
+        Point end;
+    };
+
+    class Polygon : public SVGElement
+    {
+    public:
+        Polygon(const Color &fill, const std::vector<Point> &points);
+        void draw(PNGImage &img) const override;
+
+    private:
+        Color fill;
+        std::vector<Point> points;
+    };
+
+     class Rect : public SVGElement
+    {
+    public:
+        Rect(const Color &fill, const Point &top_left, const Point &bottom_right);
+        void draw(PNGImage &img) const override;
+
+    private:
+        Color fill;
+        Point top_left;
+        Point bottom_right;
+    };
+
+
+
   
 }
+
 #endif
