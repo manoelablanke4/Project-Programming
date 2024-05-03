@@ -29,26 +29,45 @@ namespace svg
         const char *elem_name = elem->Name();
         if (strcmp(elem_name, "circle") == 0)
         {
-            // Parse circle attributes and create a Circle object
+            Color fill = parse_color(elem->Attribute("fill"));
             double cx = elem->DoubleAttribute("cx");
             double cy = elem->DoubleAttribute("cy");
             double r = elem->DoubleAttribute("r");
-            
-            Color fill = parse_color(elem->Attribute("fill"));
+            double translate_x = 0.0, translate_y = 0.0;
+            const char* transform_attr = elem->Attribute("transform");
+    
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+                    cx += translate_x;
+                    cy += translate_y;
+            }}}
+    
             Point p;
             p.x = cx;
             p.y = cy;
-           
             svg_elements.push_back(new Circle(fill, p, r));
-        }
+    }
+        
         else if (strcmp(elem_name, "ellipse") == 0)
         {
-            // Parse circle attributes and create a Circle object
             double cx = elem->DoubleAttribute("cx");
             double cy = elem->DoubleAttribute("cy");
             double rx = elem->DoubleAttribute("rx");
             double ry = elem->DoubleAttribute("ry");
             Color fill = parse_color(elem->Attribute("fill"));
+            double translate_x = 0.0, translate_y = 0.0;
+            const char* transform_attr = elem->Attribute("transform");
+    
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+                    cx += translate_x;
+                    cy += translate_y;
+            }}}
+
             Point p;
             p.x = cx;
             p.y = cy;
@@ -64,6 +83,19 @@ namespace svg
             double y1 = elem->DoubleAttribute("y1");
             double x2 = elem->DoubleAttribute("x2");
             double y2 = elem->DoubleAttribute("y2");
+            double translate_x1 = 0.0, translate_y1 = 0.0;
+            const char* transform_attr = elem->Attribute("transform");
+    
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x1, &translate_y1) == 2) {
+                    x1 += translate_x1;
+                    y1 += translate_y1;
+                    x2 += translate_x1;
+                    y2 += translate_y1;
+            }}}
+
             Point p1;
             p1.x = x1;
             p1.y = y1;
@@ -82,10 +114,25 @@ namespace svg
             while (point_str)
             {
                 Point p;
+                 double translate_x = 0.0, translate_y = 0.0;
+            const char* transform_attr = elem->Attribute("transform");
+    
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+                    sscanf(point_str, "%d,%d", &p.x, &p.y);
+                    point_str = strtok(NULL, " ");
+                    p.x += translate_x;
+                    p.y += translate_y;
+                    points.push_back(p);
+            }}}
+            else{
                 sscanf(point_str, "%d,%d", &p.x, &p.y);
                 points.push_back(p);
-                point_str = strtok(NULL, " ");
+                point_str = strtok(NULL, " ");}
             }
+           
             svg_elements.push_back(new Polyline(fill, points));
         }
         else if (strcmp(elem_name, "polygon") == 0){
@@ -96,9 +143,23 @@ namespace svg
             while (point_str)
             {
                 Point p;
+                 double translate_x = 0.0, translate_y = 0.0;
+            const char* transform_attr = elem->Attribute("transform");
+    
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+                    sscanf(point_str, "%d,%d", &p.x, &p.y);
+                    point_str = strtok(NULL, " ");
+                    p.x += translate_x;
+                    p.y += translate_y;
+                    points.push_back(p);
+            }}}
+            else{
                 sscanf(point_str, "%d,%d", &p.x, &p.y);
                 points.push_back(p);
-                point_str = strtok(NULL, " ");
+                point_str = strtok(NULL, " ");}
             }
             svg_elements.push_back(new Polygon(fill, points));
         }
@@ -108,6 +169,16 @@ namespace svg
             double y = elem->DoubleAttribute("y");
             double width = elem->DoubleAttribute("width");
             double height = elem->DoubleAttribute("height");
+            double translate_x = 0.0, translate_y = 0.0;
+            const char* transform_attr = elem->Attribute("transform");
+
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+                    x += translate_x;
+                    y += translate_y; 
+            }}}
             Point p;
             p.x = x;
             p.y = y;
