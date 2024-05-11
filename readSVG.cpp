@@ -35,6 +35,7 @@ namespace svg
             double r = elem->DoubleAttribute("r");
             double translate_x = 0.0, translate_y = 0.0;
             double degrees = 0;
+            int scale = 0;
             const char* transform_attr = elem->Attribute("transform");
             const char* transform_origin_attr = elem->Attribute("transform-origin");
 
@@ -66,18 +67,19 @@ namespace svg
                 }
             }
             else if(scale_str != nullptr){
-                int scale = 0;
                 if(sscanf(scale_str, "scale(%d)", &scale) == 1){
                     if(transform_origin_attr != nullptr){
                         Point origin;
                         sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
                         p = p.scale(origin, scale);
+                        r = r*scale;
                     }
                     else{
                         Point origin;
                         origin.x = 0;
                         origin.y = 0;
-                        p = p.scale(origin, scale);}
+                        p = p.scale(origin, scale);
+                        r = r*scale;}
 
                 }
             }
