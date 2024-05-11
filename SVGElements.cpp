@@ -73,21 +73,17 @@ namespace svg
 
     Rect::Rect(const Color &fill,
                const Point &top_left,
-               const Point &bottom_right)
-        : fill(fill), top_left(top_left), bottom_right(bottom_right)
+               const Point &top_right,
+               const Point &bottom_right,
+               const Point &bottom_left)
+        : fill(fill), top_left(top_left), top_right(top_right), bottom_right(bottom_right), bottom_left(bottom_left)
     {
     }
 
     void Rect::draw(PNGImage &img) const
     {
         
-        Point top_right;
-        top_right.x = bottom_right.x;
-        top_right.y = top_left.y;
-
-        Point bottom_left;
-        bottom_left.x = top_left.x;
-        bottom_left.y = bottom_right.y;
+        
 
         std ::vector<Point> points;
         points.push_back(top_left);

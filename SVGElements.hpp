@@ -90,13 +90,16 @@ namespace svg
      class Rect : public SVGElement
     {
     public:
-        Rect(const Color &fill, const Point &top_left, const Point &bottom_right);
+        Rect(const Color &fill, const Point &top_left, const Point &top_right,const Point &bottom_right, const Point &bottom_left);
         void draw(PNGImage &img) const override;
 
     private:
         Color fill;
         Point top_left;
+        Point top_right;
         Point bottom_right;
+        Point bottom_left;
+
     };
 
 

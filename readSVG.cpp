@@ -68,10 +68,17 @@ namespace svg
             else if(scale_str != nullptr){
                 int scale = 0;
                 if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+                    if(transform_origin_attr != nullptr){
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                        p = p.scale(origin, scale);
+                    }
+                    else{
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                        p = p.scale(origin, scale);}
 
-                    p.x = p.x * scale;
-                    p.y = p.y * scale;
-    
                 }
             }
             }
@@ -277,27 +284,69 @@ namespace svg
             double width = elem->DoubleAttribute("width");
             double height = elem->DoubleAttribute("height");
             double translate_x = 0.0, translate_y = 0.0;
+            int degrees = 0;
             const char* transform_attr = elem->Attribute("transform");
+            const char* transform_origin_attr = elem->Attribute("transform-origin");
+            Point t_l;
+            t_l.x = x;
+            t_l.y = y;
+            Point t_r;
+            t_r.x = x + width-1;
+            t_r.y = y;
+            Point b_r;
+            b_r.x = x + width-1;
+            b_r.y = y + height-1;
+            Point b_l;
+            b_l.x = x;
+            b_l.y = y + height-1;
 
             if (transform_attr != nullptr) {
             const char* translate_str = strstr(transform_attr, "translate");
+            const char* rotate_str = strstr(transform_attr, "rotate");
             if (translate_str != nullptr) {
                 if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
-                    x += translate_x;
-                    y += translate_y; 
+                    t_l.x += translate_x;
+                    t_l.y += translate_y; 
+                    t_r.x += translate_x;
+                    t_r.y += translate_y;
+                    b_r.x += translate_x;
+                    b_r.y += translate_y;
+                    b_l.x += translate_x;
+                    b_l.y += translate_y;
             }
-            if (sscanf(translate_str, "translate(%lf,%lf)", &translate_x, &translate_y) == 2) {
-                    x += translate_x;
-                    y += translate_y; 
-            }}}
-            Point p;
-            p.x = x;
-            p.y = y;
-            Point d;
-            d.x = p.x + width-1;
-            d.y = p.y + height-1;
-            svg_elements.push_back(new Rect(fill, p, d));
-        
+            else if (sscanf(translate_str, "translate(%lf,%lf)", &translate_x, &translate_y) == 2) {
+                    t_l.x += translate_x;
+                    t_l.y += translate_y; 
+                    t_r.x += translate_x;
+                    t_r.y += translate_y;
+                    b_r.x += translate_x;
+                    b_r.y += translate_y;
+                    b_l.x += translate_x;
+                    b_l.y += translate_y;
+            }}
+            else if(rotate_str != nullptr){
+                if(sscanf(rotate_str, "rotate(%d)", &degrees) == 1){
+                    if(transform_origin_attr != nullptr){
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                       
+                        t_l = t_l.rotate(origin, degrees);
+                        t_r = t_r.rotate(origin, degrees);
+                        b_r = b_r.rotate(origin, degrees);
+                        b_l = b_l.rotate(origin, degrees);
+                       
+                    }
+                    else{
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                       
+                        t_l = t_l.rotate(origin, degrees);
+                        t_r = t_r.rotate(origin, degrees);
+                        b_r = b_r.rotate(origin, degrees);
+                        b_l = b_l.rotate(origin, degrees);
+                        }}}}
+            svg_elements.push_back(new Rect(fill, t_l, t_r,b_r,b_l));
         }
          elem = elem->NextSiblingElement();
     }
