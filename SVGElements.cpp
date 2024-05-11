@@ -80,6 +80,7 @@ namespace svg
 
     void Rect::draw(PNGImage &img) const
     {
+        
         Point top_right;
         top_right.x = bottom_right.x;
         top_right.y = top_left.y;

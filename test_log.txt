@@ -1,7 +1,3 @@
->>>> [1] translate_circle <<<<
->>>> [2] translate_ellipse <<<<
->>>> [3] translate_line <<<<
->>>> [4] translate_polygon <<<<
->>>> [5] translate_polyline <<<<
->>>> [6] translate_rect <<<<
-pixel (5 5): expected 0 255 0 got 255 255 0
+>>>> [1] rect_1 <<<<
+>>>> [2] rect_2 <<<<
+>>>> [3] rect_3 <<<<
