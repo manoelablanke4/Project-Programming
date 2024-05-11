@@ -98,22 +98,45 @@ namespace svg
             double translate_x = 0.0, translate_y = 0.0;
       
             const char* transform_attr = elem->Attribute("transform");
-    
-            if (transform_attr != nullptr) {
-            const char* translate_str = strstr(transform_attr, "translate");
-           
-            if (translate_str != nullptr) {
-                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
-                    cx += translate_x;
-                    cy += translate_y;
-            }}}
-
+            const char* transform_origin_attr = elem->Attribute("transform-origin");
             Point p;
             p.x = cx;
             p.y = cy;
             Point r;
             r.x = rx;
             r.y = ry;
+    
+            if (transform_attr != nullptr) {
+            const char* translate_str = strstr(transform_attr, "translate");
+            const char* scale_str = strstr(transform_attr, "scale");
+           
+            if (translate_str != nullptr) {
+                if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+                    p.x += translate_x;
+                    p.y += translate_y;
+            }}
+            else if(scale_str != nullptr){
+                int scale = 0;
+                if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+                    if(transform_origin_attr != nullptr){
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                        p = p.scale(origin, scale);
+                        r.x = r.x * scale;
+                        r.y = r.y * scale;
+                    }
+                    else{
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                        p = p.scale(origin, scale);
+                        r.x = r.x * scale;
+                        r.y = r.y * scale;}
+
+            }
+            }}
+
+
             svg_elements.push_back(new Ellipse(fill, p, r));
         }
 
@@ -137,6 +160,7 @@ namespace svg
             if (transform_attr != nullptr) {
             const char* translate_str = strstr(transform_attr, "translate");
             const char* rotate_str = strstr(transform_attr, "rotate");
+            const char* scale_str = strstr(transform_attr, "scale");
             if (translate_str != nullptr) {
                 if (sscanf(translate_str, "translate(%lf %lf)", &translate_x1, &translate_y1) == 2) {
                     p1.x += translate_x1;
@@ -159,7 +183,31 @@ namespace svg
                         p1 = p1.rotate(origin, degrees);
                         p2 = p2.rotate(origin, degrees);}
                 }
-            }}
+            }
+            else if(scale_str != nullptr){
+                int scale = 0;
+                if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+                    if(transform_origin_attr != nullptr){
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                        p1 = p1.scale(origin, scale);
+                        p2 = p2.scale(origin, scale);
+                    }
+                    else{
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                        p1 = p1.scale(origin, scale);
+                        p2 = p2.scale(origin, scale);}
+                }
+            }
+            }
+            else{
+                p1.x = x1;
+                p1.y = y1;
+                p2.x = x2;
+                p2.y = y2;
+            }
             
 
             svg_elements.push_back(new Line(fill, p1, p2));
@@ -181,6 +229,8 @@ namespace svg
             if (transform_attr != nullptr) {
             const char* translate_str = strstr(transform_attr, "translate");
             const char* rotate_str = strstr(transform_attr, "rotate");
+            const char* scale_str = strstr(transform_attr, "scale");
+
             if (translate_str != nullptr) {
                 if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
                     sscanf(point_str, "%d,%d", &p.x, &p.y);
@@ -209,11 +259,27 @@ namespace svg
                         points.push_back(p);}
                 }
             }
-            else{
-                sscanf(point_str, "%d,%d", &p.x, &p.y);
-                points.push_back(p);
-                point_str = strtok(NULL, " ");    
-            }}
+            else if(scale_str != nullptr){
+                int scale = 0;
+                if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+                    if(transform_origin_attr != nullptr){
+                        sscanf(point_str, "%d,%d", &p.x, &p.y);
+                        point_str = strtok(NULL, " ");
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                        p = p.scale(origin, scale);
+                        points.push_back(p);
+                    }
+                    else{
+                        sscanf(point_str, "%d,%d", &p.x, &p.y);
+                        point_str = strtok(NULL, " ");
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                        p = p.scale(origin, scale);
+                        points.push_back(p);
+                        }}}
+            }
             else{
                 sscanf(point_str, "%d,%d", &p.x, &p.y);
                 points.push_back(p);
@@ -222,6 +288,10 @@ namespace svg
            
             svg_elements.push_back(new Polyline(fill, points));
         }
+
+
+
+
         else if (strcmp(elem_name, "polygon") == 0){
             Color fill = parse_color(elem->Attribute("fill"));
             vector<Point> points;
@@ -238,6 +308,7 @@ namespace svg
             if (transform_attr != nullptr) {
             const char* translate_str = strstr(transform_attr, "translate");
             const char* rotate_str = strstr(transform_attr, "rotate");
+            const char* scale_str = strstr(transform_attr, "scale");
             if (translate_str != nullptr) {
                 if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
                     sscanf(point_str, "%d,%d", &p.x, &p.y);
@@ -267,11 +338,27 @@ namespace svg
                         points.push_back(p);}
                 }
             }
-            else{
-                sscanf(point_str, "%d,%d", &p.x, &p.y);
-                points.push_back(p);
-                point_str = strtok(NULL, " ");    
-            }}
+            else if(scale_str != nullptr){
+                int scale = 0;
+                if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+                    if(transform_origin_attr != nullptr){
+                        sscanf(point_str, "%d,%d", &p.x, &p.y);
+                        point_str = strtok(NULL, " ");
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                        p = p.scale(origin, scale);
+                        points.push_back(p);
+                    }
+                    else{
+                        sscanf(point_str, "%d,%d", &p.x, &p.y);
+                        point_str = strtok(NULL, " ");
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                        p = p.scale(origin, scale);
+                        points.push_back(p);
+                        }}}
+            }
             else{
                 sscanf(point_str, "%d,%d", &p.x, &p.y);
                 points.push_back(p);
@@ -279,6 +366,7 @@ namespace svg
             }
             svg_elements.push_back(new Polygon(fill, points));
         }
+
         else if(strcmp(elem_name, "rect") == 0){
             Color fill = parse_color(elem->Attribute("fill"));
             double x = elem->DoubleAttribute("x");
@@ -305,6 +393,7 @@ namespace svg
             if (transform_attr != nullptr) {
             const char* translate_str = strstr(transform_attr, "translate");
             const char* rotate_str = strstr(transform_attr, "rotate");
+            const char* scale_str = strstr(transform_attr, "scale");
             if (translate_str != nullptr) {
                 if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
                     t_l.x += translate_x;
@@ -347,7 +436,31 @@ namespace svg
                         t_r = t_r.rotate(origin, degrees);
                         b_r = b_r.rotate(origin, degrees);
                         b_l = b_l.rotate(origin, degrees);
+                        }}}
+            else if(scale_str != nullptr){
+                int scale = 0;
+                if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+                    if(transform_origin_attr != nullptr){
+                        Point origin;
+                        sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+                       
+                        t_l = t_l.scale(origin, scale);
+                        t_r = t_r.scale(origin, scale);
+                        b_r = b_r.scale(origin, scale);
+                        b_l = b_l.scale(origin, scale);
+                       
+                    }
+                    else{
+                        Point origin;
+                        origin.x = 0;
+                        origin.y = 0;
+                       
+                        t_l = t_l.scale(origin, scale);
+                        t_r = t_r.scale(origin, scale);
+                        b_r = b_r.scale(origin, scale);
+                        b_l = b_l.scale(origin, scale);
                         }}}}
+
             svg_elements.push_back(new Rect(fill, t_l, t_r,b_r,b_l));
         }
          elem = elem->NextSiblingElement();
