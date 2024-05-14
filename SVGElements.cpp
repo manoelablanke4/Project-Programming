@@ -82,9 +82,6 @@ namespace svg
 
     void Rect::draw(PNGImage &img) const
     {
-        
-        
-
         std ::vector<Point> points;
         points.push_back(top_left);
         points.push_back(top_right);
@@ -92,7 +89,11 @@ namespace svg
         points.push_back(bottom_left);
 
         img.draw_polygon(points, fill);
+    }
 
+    GroupElement::GroupElement(const std::vector<SVGElement *> &elements)
+        : elements(elements)
+    {
     }
 
 
