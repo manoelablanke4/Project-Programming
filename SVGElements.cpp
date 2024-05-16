@@ -96,6 +96,23 @@ namespace svg
     {
     }
 
+    GroupElement::~GroupElement()
+    {
+        for (size_t i = 0; i < elements.size(); i++)
+        {
+            delete elements[i];
+        }
+    }
+
+    void GroupElement::draw(PNGImage &img) const
+    {
+        for (size_t i = 0; i < elements.size(); i++)
+        {
+            elements[i]->draw(img);
+        }
+
+        delete this;
+    }
 
 }
 
