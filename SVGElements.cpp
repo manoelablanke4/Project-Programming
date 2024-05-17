@@ -83,8 +83,6 @@ namespace svg
     void Rect::draw(PNGImage &img) const
     {
         
-        
-
         std ::vector<Point> points;
         points.push_back(top_left);
         points.push_back(top_right);
