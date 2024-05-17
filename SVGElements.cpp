@@ -95,6 +95,20 @@ namespace svg
 
     }
 
+      GroupElement::GroupElement(const std::vector<SVGElement *> &elements)
+        : elements(elements)
+    {
+    }
+     void GroupElement::draw(PNGImage& img) const {
+        for (const auto& element : elements) {
+            element->draw(img);
+        }
+    }
+
+    void GroupElement::addElement(SVGElement* element) {
+        elements.push_back(element);
+    }
+
 
 }
 

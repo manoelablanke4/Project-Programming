@@ -15,6 +15,7 @@ namespace svg
         SVGElement();
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;
+    
     };
 
     // Declaration of namespace functions
@@ -46,6 +47,7 @@ namespace svg
     public:
         Circle(const Color &fill, const Point &center, const double &radius);
         void draw(PNGImage &img) const override;
+        
 
     private:
         Color fill;
@@ -101,6 +103,25 @@ namespace svg
         Point bottom_left;
 
     };
+
+     class GroupElement : public SVGElement {
+        public:
+            GroupElement();
+             ~GroupElement() {
+    
+            for (auto element : elements) {
+                delete element;
+            }
+        }
+
+            GroupElement(const std::vector<SVGElement *> &elements);
+            void draw(PNGImage &img) const override;
+             void addElement(SVGElement* element);
+
+        private:
+            std::vector<SVGElement *> elements;
+    };
+
 
 
 

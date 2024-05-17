@@ -8,6 +8,115 @@ using namespace tinyxml2;
 
 namespace svg
 {
+//     void readGroup(XMLElement* group_elem, GroupElement* group) {
+//     XMLElement* child = group_elem->FirstChildElement();
+//     while (child) {
+//         printf("Found a child\n");
+//         const char* elem_name = child->Name();
+//         if (strcmp(elem_name, "g") == 0) {
+//             printf("Found a nested group\n");
+//             std::vector<SVGElement*> elements;
+//             GroupElement* nested_group = new GroupElement(elements);
+//             readGroup(child, nested_group);
+//             group->addElement(nested_group);
+//         } else {
+//         if (strcmp(elem_name, "circle") == 0)
+//         {
+//             printf("Found a circle\n");
+//             Color fill = parse_color(group_elem->Attribute("fill"));
+//             double cx = child->DoubleAttribute("cx");
+//             double cy = child->DoubleAttribute("cy");
+//             double r = child->DoubleAttribute("r");
+            
+//             Point p;
+//             p.x = cx;
+//             p.y = cy;
+
+            
+    
+//             group->addElement(new Circle(fill, p, r));
+//     }
+//             else if (strcmp(elem_name, "polyline") == 0){
+//             Color fill = parse_color(group_elem->Attribute("stroke"));
+//             vector<Point> points;
+//             const char *points_str = group_elem->Attribute("points");
+//             char *point_str = strtok((char *)points_str, " ");
+//             while (point_str)
+//             {
+//                 Point p;
+//                  double translate_x = 0.0, translate_y = 0.0;
+//                  int degrees = 0;
+//             const char* transform_attr = group_elem->Attribute("transform");
+//             const char* transform_origin_attr = group_elem->Attribute("transform-origin");
+    
+//             if (transform_attr != nullptr) {
+//             const char* translate_str = strstr(transform_attr, "translate");
+//             const char* rotate_str = strstr(transform_attr, "rotate");
+//             const char* scale_str = strstr(transform_attr, "scale");
+
+//             if (translate_str != nullptr) {
+//                 if (sscanf(translate_str, "translate(%lf %lf)", &translate_x, &translate_y) == 2) {
+//                     sscanf(point_str, "%d,%d", &p.x, &p.y);
+//                     point_str = strtok(NULL, " ");
+//                     p.x += translate_x;
+//                     p.y += translate_y;
+//                     points.push_back(p);
+//             }}
+//             else if(rotate_str != nullptr){
+//                 if(sscanf(rotate_str, "rotate(%d)", &degrees) == 1){
+//                     if(transform_origin_attr != nullptr){
+//                         sscanf(point_str, "%d,%d", &p.x, &p.y);
+//                         point_str = strtok(NULL, " ");
+//                         Point origin;
+//                         sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+//                         p = p.rotate(origin, degrees);
+//                         points.push_back(p);
+//                     }
+//                     else{
+//                         sscanf(point_str, "%d,%d", &p.x, &p.y);
+//                         point_str = strtok(NULL, " ");
+//                         Point origin;
+//                         origin.x = 0;
+//                         origin.y = 0;
+//                         p = p.rotate(origin, degrees);
+//                         points.push_back(p);}
+//                 }
+//             }
+//             else if(scale_str != nullptr){
+//                 int scale = 0;
+//                 if(sscanf(scale_str, "scale(%d)", &scale) == 1){
+//                     if(transform_origin_attr != nullptr){
+//                         sscanf(point_str, "%d,%d", &p.x, &p.y);
+//                         point_str = strtok(NULL, " ");
+//                         Point origin;
+//                         sscanf(transform_origin_attr, "%d %d", &origin.x, &origin.y);
+//                         p = p.scale(origin, scale);
+//                         points.push_back(p);
+//                     }
+//                     else{
+//                         sscanf(point_str, "%d,%d", &p.x, &p.y);
+//                         point_str = strtok(NULL, " ");
+//                         Point origin;
+//                         origin.x = 0;
+//                         origin.y = 0;
+//                         p = p.scale(origin, scale);
+//                         points.push_back(p);
+//                         }}}
+//             }
+//             else{
+//                 sscanf(point_str, "%d,%d", &p.x, &p.y);
+//                 points.push_back(p);
+//                 point_str = strtok(NULL, " ");}
+//             }
+           
+//         group->addElement(new Polyline(fill, points));
+//         }
+
+//         }
+
+//         child = child->NextSiblingElement();
+//     }
+// }
     void readSVG(const string& svg_file, Point& dimensions, vector<SVGElement *>& svg_elements)
     {
         XMLDocument doc;
@@ -463,6 +572,17 @@ namespace svg
 
             svg_elements.push_back(new Rect(fill, t_l, t_r,b_r,b_l));
         }
+        // else if(strcmp(elem_name, "g") == 0){
+        //      std::vector<SVGElement *> elements;
+        //      GroupElement* group = new GroupElement(elements);
+        //      readGroup(elem, group);
+        //      svg_elements.push_back(group);
+
+            
+        // }
          elem = elem->NextSiblingElement();
     }
-}}
+}
+
+}
+
