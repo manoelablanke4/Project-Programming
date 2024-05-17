@@ -9,14 +9,18 @@ using namespace tinyxml2;
 namespace svg
 {
     // auxiliary functions to make the code cleaner
-    void circle(XMLElement *elem, vector<SVGElement *> &svg_elements, double translate_x = 0.0, double translate_y = 0.0, int degrees = 0, int scale = 0) {
+    void circle(XMLElement *elem, vector<SVGElement *> &svg_elements) {
         Color fill = parse_color(elem->Attribute("fill"));
         double cx = elem->DoubleAttribute("cx");
         double cy = elem->DoubleAttribute("cy");
         double r = elem->DoubleAttribute("r");
 
+        double translate_x = 0.0, translate_y = 0.0;
+        double degrees = 0;
+        int scale = 0;
         const char* transform_attr = elem->Attribute("transform");
         const char* transform_origin_attr = elem->Attribute("transform-origin");
+        
 
         Point p;
         p.x = cx;
@@ -454,18 +458,14 @@ namespace svg
     {
         const char *elem_name = elem->Name();
 
-        if (strcmp(elem_name, "g") == 0)
-        {
-            double translate_x = 0.0, translate_y = 0.0;
-            double degrees = 0;
-            int scale = 0;
-            const char* transform_attr = elem->Attribute("transform");
-            const char* transform_origin_attr = elem->Attribute("transform-origin");
+        // if (strcmp(elem_name, "g") == 0)
+        // {
 
-            // ler os atributos do transform, guardar e dps aplicar em cada elemento
 
-            elem = elem->NextSiblingElement();
-        }
+        //     // ler os atributos do transform, guardar e dps aplicar em cada elemento
+
+        //     elem = elem->NextSiblingElement();
+        // }
 
         if (strcmp(elem_name, "circle") == 0)
         {
